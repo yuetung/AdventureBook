@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/black"
+    tools:context="com.example.yuetung55.adventurebook.MainActivity">
+
+    <TextView
+        android:id="@+id/mainMenuTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/holo_red_light"
+        android:text="Main Menu"
+        android:textAlignment="center"
+        android:textSize="40sp"
+        />
+    <Button
+        android:id="@+id/exampleStory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12sp"
+        android:layout_marginBottom="16sp"
+        android:layout_marginRight="16sp"
+        android:layout_marginLeft="16sp"
+        android:background="@android:color/holo_red_dark"
+        android:text="Example story"
+        />
+    <Button
+        android:id="@+id/achievements"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="16sp"
+        android:layout_marginLeft="16sp"
+        android:background="@android:color/holo_red_dark"
+        android:text="Achievements (not yet implemented)"
+        />
+</LinearLayout>

@@ -1,0 +1,4 @@
+resource_name depletable initial_stock max_stock (resource name must not contain blanks)
+windowKey false 0 1
+stone true 0 99
+knife false 0 1
