@@ -35,8 +35,8 @@ public class StoryActivity extends AppCompatActivity {
         user=User.getUser(getApplicationContext());
         resourceManager=ResourceManager.getInstance(getApplicationContext());
         storyManager=StoryManager.getInstance(getApplicationContext());
-        refresh();
         resetAll();
+        refresh();
         //Button listeners
         buttons[0].setOnClickListener(
                 new View.OnClickListener() {
@@ -89,20 +89,19 @@ public class StoryActivity extends AppCompatActivity {
     private void resetResources() {
         resourceManager.resetAllResources();
         resourceManager=ResourceManager.getInstance(getApplicationContext());  //need update resourceManager upon reset
-        refresh();
     }
 
     /* Reset and update story into database. changes user's current story node to 0 */
     private void resetStory() {
         storyManager.resetAllStories();
         user.setCurrentStoryNode(0);
-        refresh();
     }
 
     /* Reset both resources and story. */
     private void resetAll() {
         resetResources();
         resetStory();
+        refresh();
     }
 
     /* re-populate all textViews and buttons based on user data */
