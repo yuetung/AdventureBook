@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
@@ -95,11 +96,6 @@ public class StoryManager {
         this.context=context;
         storyDbHelper=new StoryDbHelper(context);
         storyDb=storyDbHelper.getWritableDatabase();
-        if (!tableStoryExists(StoryTable.StoryEntry.TABLE_NAME)) {
-            //System.out.println("creating new story table");    //debug
-            // Get initialization info from assets->storybook.txt (modify this file to change current story or add new stories)
-            initializeStories();
-        }
     }
 
     /* Singleton implementation */
@@ -153,15 +149,6 @@ public class StoryManager {
                     cv.put(StoryTable.StoryEntry.COL_OPTION4, options[3]);
                     cv.put(StoryTable.StoryEntry.COL_OPTION5, options[4]);
                     storyDb.insert(StoryTable.StoryEntry.TABLE_NAME, null, cv);
-                    /*System.out.println("inserted"+text);   //debug
-                    System.out.println("inserted"+pageNumber);
-                    System.out.println("inserted"+resourceGained);
-                    System.out.println("inserted"+amountGained);
-                    System.out.println("inserted"+options[0]);
-                    System.out.println("inserted"+options[1]);
-                    System.out.println("inserted"+options[2]);
-                    System.out.println("inserted"+options[3]);
-                    System.out.println("inserted"+options[4]);*/
                     pageNumber="0";
                     text="";
                     resourceGained="none";
@@ -236,6 +223,9 @@ public class StoryManager {
             return new StoryNode(pageNumber,resourceGained,amountGained,text,storyPaths);
         } catch (NumberFormatException ex) {
             System.out.println("corrupted story database");
+        } catch (CursorIndexOutOfBoundsException ex) {
+            System.out.println("Page number" + pageNumber +" does not exists/corrupted in database, please check storybook.txt");
+
         }
         return null;
     }
@@ -251,23 +241,6 @@ public class StoryManager {
     public void close() {
         storyDb.close();
         instance=null;
-    }
-
-    /* method to check if Db exists*/
-    private boolean tableStoryExists(String tableName) {
-        //System.out.println("table name is:"+tableName );    //debug
-        Cursor cursor = storyDb.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+tableName+"'", null);
-        //System.out.println("inside check table exists");    //debug
-        if(cursor!=null) {
-            //System.out.println("cursor is"+cursor.getCount());    //debug
-            if(cursor.getCount()>0) {
-                //System.out.println("cursor count>0");    //debug
-                cursor.close();
-                return true;
-            }
-            cursor.close();
-        }
-        return false;
     }
 
 }

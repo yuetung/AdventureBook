@@ -35,7 +35,9 @@ public class StoryActivity extends AppCompatActivity {
         user=User.getUser(getApplicationContext());
         resourceManager=ResourceManager.getInstance(getApplicationContext());
         storyManager=StoryManager.getInstance(getApplicationContext());
-        resetAll();
+        if (getIntent().getBooleanExtra("reset",false)) {
+            resetAll();
+        }
         refresh();
         //Button listeners
         buttons[0].setOnClickListener(
@@ -156,12 +158,13 @@ public class StoryActivity extends AppCompatActivity {
             } else {
                 if (resourceNeeded.getDepletable()) {
                     resourceNeeded.decreaseStock(amountNeeded);
-                    resourceManager.updateDatabase(resourceNeeded.getName());
+                    resourceManager.updateDatabase(resourceNeeded);
                 }
             }
         }
         int nextPage=storyPath.getNextPage();
         user.setCurrentStoryNode(nextPage);
+        user.updateDatabase();
         //Obtain new items
         //TODO: let user click something to obtain the item instead of obtaining automatically
         StoryNode newStory=storyManager.getStory(user.getCurrentStoryNode());
@@ -169,6 +172,7 @@ public class StoryActivity extends AppCompatActivity {
         if (resourceObtained!=null) {
             int amountGained = newStory.getAmountGained();
             resourceObtained.increaseStock(amountGained);
+            resourceManager.updateDatabase(resourceObtained);
         }
         refresh();
     }

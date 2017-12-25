@@ -18,7 +18,7 @@
         android:textSize="40sp"
         />
     <Button
-        android:id="@+id/exampleStory"
+        android:id="@+id/continueGame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12sp"
@@ -26,7 +26,17 @@
         android:layout_marginRight="16sp"
         android:layout_marginLeft="16sp"
         android:background="@android:color/holo_red_dark"
-        android:text="Example story"
+        android:text="continue"
+        />
+    <Button
+        android:id="@+id/newGame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16sp"
+        android:layout_marginRight="16sp"
+        android:layout_marginLeft="16sp"
+        android:background="@android:color/holo_red_dark"
+        android:text="new game (reset)"
         />
     <Button
         android:id="@+id/achievements"

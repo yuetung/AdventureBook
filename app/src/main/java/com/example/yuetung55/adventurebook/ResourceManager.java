@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
@@ -77,10 +78,6 @@ public class ResourceManager {
         this.context=context;
         resourceDbHelper=new ResourceDbHelper(context);
         resourceDb=resourceDbHelper.getWritableDatabase();
-        if (!tableExists(ResourceTable.ResourceEntry.TABLE_NAME)) {
-            // Get initialization info from assets->resources.txt (modify this file to change default values or add new resources)
-            initializeResources();
-        }
         retrieveResourcesFromDb();
     }
     /* reset all resources to default value*/
@@ -126,13 +123,16 @@ public class ResourceManager {
                 resources.put(name,new Resource(name,depletable,stock,maxStock));
             } catch (NumberFormatException ex) {
                 System.out.println("corrupted database / text file");
+            } catch (CursorIndexOutOfBoundsException ex) {
+                System.out.println("failed to retrieve existing resource information, initializing new resources");
+                initializeResources();
+                retrieveResourcesFromDb();
             }
         }
         cursor.close();
     }
     /* update database for a particular resource */
-    public void updateDatabase(String resourceName) {
-        Resource resource=resources.get(resourceName);
+    public void updateDatabase(Resource resource) {
         ContentValues cv = new ContentValues();
         cv.put(ResourceTable.ResourceEntry.COL_NAME, resource.getName());
         cv.put(ResourceTable.ResourceEntry.COL_DEPLETABLE, resource.getDepletable());
@@ -141,7 +141,7 @@ public class ResourceManager {
         resourceDb.update(ResourceTable.ResourceEntry.TABLE_NAME, cv, ResourceTable.ResourceEntry.COL_NAME+"="+"'"+resource.getName()+"'", null);
     }
     /* update database for an array of resources */
-    public void updateDatabase(String[] resourceName) {
+    public void updateDatabase(Resource[] resourceName) {
         for (int i=0; i<resourceName.length; i++) {
             updateDatabase(resourceName[i]);
         }
@@ -149,7 +149,8 @@ public class ResourceManager {
     /* update all resources */
     public void updateDatabase() {
         for (String resourceName:resources.keySet()) {
-            updateDatabase(resourceName);
+            Resource resource=resources.get(resourceName);
+            updateDatabase(resource);
         }
     }
 
@@ -222,19 +223,6 @@ public class ResourceManager {
     public void close() {
         instance=null;
         resourceDb.close();
-    }
-    /* method to check if Db exists*/
-    private boolean tableExists(String tableName) {
-        Cursor cursor = resourceDb.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+tableName+"'", null);
-        if(cursor!=null) {
-            if(cursor.getCount()>0) {
-                cursor.close();
-                return true;
-            }
-            cursor.close();
-        }
-        System.out.println("table does not exists");
-        return false;
     }
 }
 class ResourceDbHelper extends SQLiteOpenHelper {
