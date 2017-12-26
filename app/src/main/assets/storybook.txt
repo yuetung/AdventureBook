@@ -1,5 +1,5 @@
-@ to indicate page_number/item_gained/amount_gained, # to indicate option/next_page_number/item_required/amount_required
-~ to indicate end of page, the rests are treated as texts
+@ to indicate page_number/item_gained/amount_gained, ~ to indicate end of page, any letter to indicate main texts, / to indicate comments (whole line ignored when parsed)
+# to indicate option/next_page_number/item_required/amount_required/"chance" (if it's a chance event)/failure_chance/next_page_if_fail (for chance event see example at page 6)
 @ 0 none
 It's dark here. Wonder what happened.
 Flickering light shines through the window.
@@ -7,7 +7,7 @@ You can't see where the exit is.
 Looks like there's a cupboard near it.
 # Look through the window # 1 # none
 # Search the cupboard # 2 # none
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~(ending syntax: anything is ok as long as 1st character is '~')
+~
 @ 1 none
 As you walk towards the window, the flickering light is gone.
 You can hear some murmuring outside.
@@ -37,7 +37,7 @@ Oh, the cupboard appears again.
 But it does looks a bit different from before.
 # Keep screaming # 6 # none
 # Hide in the cupboard # 7 # none
-# Run out from the window # 8 # windowKey # 1
+# Run out from window # 8 # windowKey # 1
 ~
 @ 5 none
 "Clank!"
@@ -52,10 +52,12 @@ Light shines onto you as the person walks towards you.
 You should have known better.
 Screaming is a bad idea.
 Looks like he's holding a knife.
-# Run towards the door # 9 # none
+# Run towards the door # 20 # none # chance # 0.8 # 9
+/ above represents a chance event: failure chance = 0.8, goto page 9 if unlucky, otherwise go page 20.
 # Charges at him # 10 # none
 # Throw stones at him # 16 # stone # 1
-# Attack him with your knife # 11 # knife # 1
+# Attack him with your knife # 11 # knife # 1 # chance # 0.3 # 19
+/ above represents a chance event: failure chance = 0.3, goto page 19 if unlucky, otherwise go page 11.
 ~
 @ 7 none
 You run towards the cupboard and attempted to squeeze yourself into it.
@@ -65,25 +67,27 @@ Out of a sudden, that thing moves.
 # Stay inside # 12 # none
 ~
 @ 8 none
-There is nothing outside. A giant void.
+You run out from the window.
+But there is nothing outside. A giant void.
 Looks like someone has to add some more stories here.
-You might want to restart.
+You might want to reset.
 ~
 @ 9 none
 The person blocks your way.
 Of course, life is never so easy.
 # Charges at him # 10 # none
-# Attack him with your knife # 11 # knife # 1
+# Attack him with your knife # 11 # knife # 1 # chance # 0.3 # 19
 ~
 @ 10 none
 "Hey! Chill there! if we wanted your life, we would have done that long time ago!"
 Says the person as he grabbed your arm.
 "Now would you just calm down and have a little chat with me?"
 # Listen to what he says # 13 # none
-# Attack him with your knife # 11 # knife # 1
+# Attack him with your knife # 11 # knife # 1 # chance # 0.3 # 19
 ~
 @ 11 none
 You charges at him with your knife.
+You stabbed his chest with all your might.
 You watch as he slowly bleeds to death.
 Well, guess the only monster left in this room is you.
 # Walk out from the door # 8 # none
@@ -100,42 +104,69 @@ As you might have seen, the world outside this room now is nothing but a giant v
 We need you to come out with more stories and make sure this world is filled up with horrifying things. You agree?"
 # Agree # 14 # none
 # Disagree # 15 # none
-# Attack him with your knife # 11 # knife # 1
 ~
 @ 14 none
 "Thank you! guess we'll let you live for a while longer.
-If you wish, you could change the story and my dialogue through the storybook.txt file inside the assets folder.
-Be careful of the syntax though.
-To add an item, modify the resources.txt file. That's all for now, I guess."
-You might want to restart
+If you wish, you could change the story through the storybook.txt file inside the assets folder.
+Read the first 2 lines and make sure you understand the syntax fully.
+To add an item, modify the resources.txt file.
+That's all for now, I guess."
+You might want to reset.
 ~
 @ 15 none
 "Well, I'm just going remove that option.
 Let me ask you again, would you help with the story?"
 # Agree # 14 # none
-# Attack him with your knife # 11 # knife # 1
 ~
 @ 16 none
 "Hey! Stop that!"
 The person screams as he appears to retreat a little.
 # Keep Throwing stones at him # 17 # stone # 1
-# Run towards the door # 9 # none
+# Run towards the door # 20 # none # chance # 0.7 # 9
 # Charges at him # 10 # none
-# Attack him with your knife # 11 # knife # 1
+# Attack him with your knife # 11 # knife # 1 # chance # 0.3 # 19
 ~
 @ 17 none
 "I'm warning you! Stop that!"
 The person screams as he appears to retreat a little further.
 # Keep Throwing stones at him # 18 # stone # 1
-# Run towards the door # 9 # none
+# Run towards the door # 20 # none # chance # 0.6 # 9
 # Charges at him # 10 # none
-# Attack him with your knife # 11 # knife # 1
+# Attack him with your knife # 11 # knife # 1 # chance # 0.3 # 19
 ~
 @ 18 none
 He dodges your attack.
 Seems like he's waiting for you to run out of stones.
 # Keep Throwing stones at him # 18 # stone # 1
-# Run towards the door # 9 # none
+# Run towards the door # 20 # none # chance # 0.5 # 9
 # Charges at him # 10 # none
-# Attack him with your knife # 11 # knife # 1
+# Attack him with your knife # 11 # knife # 1 # chance # 0.3 # 19
+~
+@ 19 none
+"Hey! Chill there! if we wanted your life, we would have done that long time ago!"
+Says the person as he skillfully grabbed your arm and disarmed you.
+You're totally defenseless now.
+"Now would you just calm down and have a little chat with me?"
+# Listen to what he says # 13 # none
+~
+@ 20 none
+You ran towards the door as fast as you could, dodging him.
+He attempted to chase after you.
+But as you reached the door, he just stopped moving, as if he's remembering something.
+"Why not you open the door and see for yourself?" He said.
+# Open the door # 21 # none
+~
+@ 21 none
+You opened the door.
+But there is nothing outside. A giant void.
+He started giggling.
+"Why not we have a deal?" He says.
+# Listen to what he says # 13 # none
+# Jump into the void # 22 # none
+~
+@ 22 none
+Seriously?
+Is that the best option you can come out with?
+You fall into the void as you contemplate your mistake.
+Looks like you have to reset.
 ~

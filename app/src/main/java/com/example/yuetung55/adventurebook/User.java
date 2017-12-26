@@ -132,7 +132,7 @@ class UserDbHelper extends SQLiteOpenHelper {
 class UserTable {
 
     public static final class UserEntry implements BaseColumns {
-        public static final String TABLE_NAME = "UserTableTest6";
+        public static final String TABLE_NAME = "UserTableTest9";
         public static final String COL_CURRENT_STORY_NODE = "currentStoryNode";
 
     }

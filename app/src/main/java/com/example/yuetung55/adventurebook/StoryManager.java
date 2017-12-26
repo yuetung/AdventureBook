@@ -23,14 +23,30 @@ import java.util.Scanner;
 class StoryPaths {
     private String optionText;
     private int pageNumber;
+    private int pageNumber2;
+    private boolean isChanceEvent;
+    private double chance;
     private Resource resourceNeeded;
     private int amountNeeded;
 
+    /* Constructor for non-chance event storyPaths */
     public StoryPaths(String optionText, int pageNumber, Resource resourceNeeded, int amountNeeded) {
         this.optionText = optionText;
         this.pageNumber = pageNumber;
         this.resourceNeeded = resourceNeeded;
         this.amountNeeded = amountNeeded;
+        this.isChanceEvent=false;
+    }
+
+    /* Constructor for chance event storyPaths */
+    public StoryPaths(String optionText, int pageNumber, Resource resourceNeeded, int amountNeeded, double chance, int pageNumber2) {
+        this.optionText = optionText;
+        this.pageNumber = pageNumber;
+        this.resourceNeeded = resourceNeeded;
+        this.amountNeeded = amountNeeded;
+        this.isChanceEvent=true;
+        this.chance=chance;
+        this.pageNumber2=pageNumber2;
     }
 
     public String getOptionText() {
@@ -41,6 +57,12 @@ class StoryPaths {
         return pageNumber;
     }
 
+    public int getNextPage2() {
+        return pageNumber2;
+    }
+
+    public double getChance() {return chance;}
+
     public Resource getResourceNeeded() {
         return resourceNeeded;
     }
@@ -48,6 +70,11 @@ class StoryPaths {
     public int getAmountNeeded() {
         return amountNeeded;
     }
+
+    public boolean isChanceEvent() {
+        return isChanceEvent;
+    }
+
 }
 class StoryNode {
     private String text;
@@ -158,6 +185,9 @@ public class StoryManager {
                     }
                     optionCount=0;
                 }
+                else if (line.charAt(0)=='/') {    // is option
+                    continue;    //ignore
+                }
                 else {    // is text
                     text+="\n\n"+line;
                 }
@@ -201,6 +231,7 @@ public class StoryManager {
             optionTexts[2]=cursor.getString(indexOption3);
             optionTexts[3]=cursor.getString(indexOption4);
             optionTexts[4]=cursor.getString(indexOption5);
+            // Parser for storyPaths
             for (int i=0; i<optionTexts.length; i++) {
                 if (optionTexts[i].equals("none")) continue;
                 String[] parts = optionTexts[i].split("#");
@@ -217,12 +248,21 @@ public class StoryManager {
                     //System.out.println("amountNeeded is: "+parts[3]);    //debug
                     amountNeeded=Integer.parseInt(parts[3].trim());
                 }
-                storyPaths.add(new StoryPaths(optionText,nextPage,resourceNeeded,amountNeeded));
+                if (!Arrays.asList(parts).contains(" chance ")) {
+                    storyPaths.add(new StoryPaths(optionText, nextPage, resourceNeeded, amountNeeded));
+                }  else {
+                    int index=Arrays.asList(parts).indexOf(" chance ");
+                    double chance=Double.parseDouble(parts[index+1].trim());
+                    //System.out.println("chance is: "+chance);      //debug
+                    int nextPage2=Integer.parseInt(parts[index+2].trim());
+                    //System.out.println("next page 2 is: "+nextPage2);      //debug
+                    storyPaths.add(new StoryPaths(optionText, nextPage, resourceNeeded, amountNeeded, chance, nextPage2));
+                }
             }
             cursor.close();
             return new StoryNode(pageNumber,resourceGained,amountGained,text,storyPaths);
         } catch (NumberFormatException ex) {
-            System.out.println("corrupted story database");
+            System.out.println("corrupted story database at page "+pageNumber);
         } catch (CursorIndexOutOfBoundsException ex) {
             System.out.println("Page number" + pageNumber +" does not exists/corrupted in database, please check storybook.txt");
 

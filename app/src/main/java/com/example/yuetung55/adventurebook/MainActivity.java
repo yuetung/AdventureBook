@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                             builder = new AlertDialog.Builder(MainActivity.this);
                             builder.setTitle("RESET GAME")
                                     .setMessage("Are you sure you want to reset the game? All existing data will be erased.")
-                                    .setPositiveButton("GO AHEAD", new DialogInterface.OnClickListener() {
+                                    .setPositiveButton("RESET", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             Context context = getApplicationContext();
                                             Intent intent = new Intent(context, StoryActivity.class);
