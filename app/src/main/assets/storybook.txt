@@ -1,5 +1,5 @@
-@ to indicate page_number/item_gained/amount_gained, ~ to indicate end of page, any letter to indicate main texts, / to indicate comments (whole line ignored when parsed)
-# to indicate option/next_page_number/item_required/amount_required/"chance" (if it's a chance event)/failure_chance/next_page_if_fail (for chance event see example at page 6)
+// '@' to indicate page_number/item_gained/amount_gained, '~' to indicate end of page, any letter to indicate main texts, '/' to indicate comments (whole line ignored when parsed)
+// '#' to indicate option/next_page_number/item_required/amount_required(ignored if item_required="none")/"chance"(if it's a chance event)/failure_chance/next_page_if_fail(for chance event see example at page 6)
 @ 0 none
 It's dark here. Wonder what happened.
 Flickering light shines through the window.
